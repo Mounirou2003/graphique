@@ -59,7 +59,7 @@ int main()
 		else if (!mousePrecPos.empty())
 			mousePrecPos.clear();
 
-		buildGraph(f, 0.f, 0.001f, view, graphique, sf::Color::Blue, true, sf::Color::Black);
+		buildGraph(f, 1.f, 0.001f, view, graphique, sf::Color::Blue, true, sf::Color::Black);
 
 		window.setView(view);
 		window.clear(sf::Color::White);
