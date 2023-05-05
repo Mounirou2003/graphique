@@ -1,8 +1,6 @@
 #include <SFML/Graphics.hpp>
 #include "graphicBuilder.hpp"
 #include <vector>
-#include <iostream>
-
 
 int main()
 {
