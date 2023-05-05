@@ -63,83 +63,81 @@ bool buildGraph(float(*f)(float, float), float value, float prec, sf::View const
 bool construit(float (*f)(float, float), float valeur, float const precision, sf::FloatRect I, std::vector<sf::Vertex>& graphique)
 {
 	sf::Vector2f pas = sf::Vector2f(I.width, I.height) * precision;
-	if (pas.x > 1e-6 && pas.y > 1e-6) {
 
-		graphique.clear();
+	graphique.clear();
 
-		for (float x = I.left; x <= I.left + I.width - pas.x; x += pas.x) {
-			for (float y = I.top; y <= I.top + I.height - pas.y; y += pas.y) {
-				std::array<bool, 4> quadB;
-				std::array<sf::Vector2f, 4> quadPos;
+	for (float x = I.left; x <= I.left + I.width - pas.x; x += pas.x) {
+		for (float y = I.top; y <= I.top + I.height - pas.y; y += pas.y) {
+			std::array<bool, 4> quadB;
+			std::array<sf::Vector2f, 4> quadPos;
 
-				for (int i = 0; i < 4; i++) {
-					quadPos.at(i) = { x + pas.x * (i % 2), y + pas.y * ((int)(i / 2) != 0) };
-					quadB.at(i) = f(quadPos.at(i).x, quadPos.at(i).y) >= valeur;
+			for (int i = 0; i < 4; i++) {
+				quadPos.at(i) = { x + pas.x * (i % 2), y + pas.y * ((int)(i / 2) != 0) };
+				quadB.at(i) = f(quadPos.at(i).x, quadPos.at(i).y) >= valeur;
+			}
+
+			for (int i = 0; i < 2; i++) {
+				if (quadB.at(i) != quadB.at(2 * i + 1)) {
+					sf::Vector2f point1, point2, point3;
+					bool point1B, point2B, point3B;
+
+					point1 = quadPos.at(i);
+					point1B = quadB.at(i);
+
+					point2 = quadPos.at(i);
+					point2B = quadB.at(i);
+
+					point3 = quadPos.at(2 * i + 1);
+					point3B = quadB.at(2 * i + 1);
+
+					for (int k = 0; k < 3; k++) {
+						if (point2B == point1B) {
+
+							point1 = point2;
+							point2 = moyenne(point2, point3);
+						}
+						else
+						{
+							point3 = point2;
+							point2 = moyenne(point2, point2);
+						}
+					}
+
+					graphique.push_back(point2);
 				}
 
-				for (int i = 0; i < 2; i++) {
-					if (quadB.at(i) != quadB.at(2 * i + 1)) {
-						sf::Vector2f point1, point2, point3;
-						bool point1B, point2B, point3B;
+				if (quadB.at(2 * i) != quadB.at(i + 2)) {
+					sf::Vector2f point1, point2, point3;
+					bool point1B, point2B, point3B;
 
-						point1 = quadPos.at(i);
-						point1B = quadB.at(i);
+					point1 = quadPos.at(2 * i);
+					point1B = quadB.at(2 * i);
 
-						point2 = quadPos.at(i);
-						point2B = quadB.at(i);
+					point2 = quadPos.at(2 * i);
+					point2B = quadB.at(2 * i);
 
-						point3 = quadPos.at(2 * i + 1);
-						point3B = quadB.at(2 * i + 1);
+					point3 = quadPos.at(2 + i);
+					point3B = quadB.at(2 + i);
 
-						for (int k = 0; k < 3; k++) {
-							if (point2B == point1B) {
 
-								point1 = point2;
-								point2 = moyenne(point2, point3);
-							}
-							else
-							{
-								point3 = point2;
-								point2 = moyenne(point2, point2);
-							}
+					for (int k = 0; k < 3; k++) {
+						if (point2B == point1B) {
+
+							point1 = point2;
+							point2 = moyenne(point2, point3);
 						}
-
-						graphique.push_back(point2);
+						else
+						{
+							point3 = point2;
+							point2 = moyenne(point2, point2);
+						}
 					}
 
-					if (quadB.at(2 * i) != quadB.at(i + 2)) {
-						sf::Vector2f point1, point2, point3;
-						bool point1B, point2B, point3B;
-
-						point1 = quadPos.at(2 * i);
-						point1B = quadB.at(2 * i);
-
-						point2 = quadPos.at(2 * i);
-						point2B = quadB.at(2 * i);
-
-						point3 = quadPos.at(2 + i);
-						point3B = quadB.at(2 + i);
-
-
-						for (int k = 0; k < 3; k++) {
-							if (point2B == point1B) {
-
-								point1 = point2;
-								point2 = moyenne(point2, point3);
-							}
-							else
-							{
-								point3 = point2;
-								point2 = moyenne(point2, point2);
-							}
-						}
-
-						graphique.push_back(point2);
-					}
+					graphique.push_back(point2);
 				}
 			}
 		}
-		return true;
 	}
+
 	return false;
 }
