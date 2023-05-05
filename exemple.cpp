@@ -18,7 +18,7 @@ int main()
 	srand(time(NULL));
 	std::vector<sf::Vertex> graphique;
 
-	std::vector<sf::Vector2i> mousePrecPos;//position précédente de la sourie utilisée pour déplacer la zone d'affichage
+	std::vector<sf::Vector2i> mousePrecPos;//position prÃ©cÃ©dente de la sourie utilisÃ©e pour dÃ©placer la zone d'affichage
 	while (window.isOpen())
 	{
 		sf::Event event;
@@ -30,7 +30,7 @@ int main()
 			//***************************** Gestion de zoom *****************************
 			if (event.type == sf::Event::MouseWheelScrolled)
 			{
-				sf::Vector2f posSouris = sf::Vector2f(sf::Mouse::getPosition(window)) - 0.5f * sf::Vector2f(window.getSize()); //position de la souris par rapport au centre de la fenêtre
+				sf::Vector2f posSouris = sf::Vector2f(sf::Mouse::getPosition(window)) - 0.5f * sf::Vector2f(window.getSize()); //position de la souris par rapport au centre de la fenÃªtre
 
 				float k;
 				if (event.mouseWheelScroll.delta > 0)
@@ -42,12 +42,12 @@ int main()
 					k = 10.f / 9;
 				}
 				view.zoom(k);
-				view.move(posSouris * (1 - k) * zoom);//permet de zoomer sans déplacer le point au niveau de la souris
+				view.move(posSouris * (1 - k) * zoom);//permet de zoomer sans dÃ©placer le point au niveau de la souris
 				zoom *= k; //on garde trace du zoom de la vu
 			}
 		}
 
-		//***************************** Gestion des déplacements *****************************
+		//***************************** Gestion des dÃ©placements *****************************
 		if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
 			if (!mousePrecPos.empty()) {
 				view.move(zoom * (sf::Vector2f(*mousePrecPos.rbegin() - sf::Mouse::getPosition())));
