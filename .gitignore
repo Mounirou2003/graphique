@@ -363,10 +363,4 @@ MigrationBackup/
 FodyWeavers.xsd
 /graphique(V2).vcxproj
 /graphique(V2).vcxproj.filters
-/openal32.dll
-/sfml-audio-2.dll
-/sfml-audio-d-2.dll
-/sfml-graphics-2.dll
-/graphique(V2).sln
-/sfml-graphics-d-2.dll
 *.dll
