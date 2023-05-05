@@ -364,3 +364,4 @@ FodyWeavers.xsd
 /graphique(V2).vcxproj
 /graphique(V2).vcxproj.filters
 *.dll
+/graphique(V2).sln
