@@ -12,7 +12,7 @@ int main()
 	float zoom = 1.f;//zoom actuel
 	view.zoom(zoom);
 
-	auto f = [](float x, float y)->float {return sin(0.001*sqrt(x*x+y*y)); };//y + x = 0
+	auto f = [](float x, float y)->float {return sin(0.01*sqrt(x*x+y*y)); };//y + x = 0
 
 
 	srand(time(NULL));
@@ -59,7 +59,7 @@ int main()
 		else if (!mousePrecPos.empty())
 			mousePrecPos.clear();
 
-		buildGraph(f, 1.f, 0.001f, view, graphique, sf::Color::Blue, true, sf::Color::Black);
+		buildGraph(f, 0.f, 0.001f, view, graphique, sf::Color::Blue, true, sf::Color::Black);
 
 		window.setView(view);
 		window.clear(sf::Color::White);
