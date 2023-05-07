@@ -17,6 +17,7 @@ sf::Vector2f moyenne(sf::Vector2f point1, sf::Vector2f point2)
 	return moy;
 }
 
+/*
 bool buildGraph(float(*f)(float, float), float value, float prec, sf::View const& view, std::vector<sf::Vertex>& graph, sf::Color graphColor, bool drawAxes, sf::Color AxesColor)
 {
 	sf::FloatRect viewRect = sf::FloatRect(sf::Vector2f(view.getCenter().x - 0.5f * view.getSize().x, -view.getCenter().y - 0.5f * view.getSize().y), view.getSize());
@@ -141,3 +142,4 @@ bool construit(float (*f)(float, float), float valeur, float const precision, sf
 
 	return false;
 }
+*/

@@ -8,14 +8,14 @@
 void arrange(std::vector<sf::Vertex>& tab, sf::Color couleur = sf::Color::White);
 sf::Vector2f moyenne(sf::Vector2f point1, sf::Vector2f point2);
 
+/*
 bool buildGraph(float (*f)(float, float), float value, float prec, sf::View const& view, std::vector<sf::Vertex>& graph, sf::Color graphColor = sf::Color::White, bool drawAxes = true, sf::Color AxesColor = sf::Color::White);
 bool construit(float (*f)(float, float), float valeur, float const precision, sf::FloatRect I, std::vector<sf::Vertex>& graphique);
-
+*/
 template<typename fonct>
 bool construit(fonct f, float valeur, float const precision, sf::FloatRect I, std::vector<sf::Vertex>& graphique);
 template<typename fonct>
 bool buildGraph(fonct f, float value, float prec, sf::View const& view, std::vector<sf::Vertex>& graph, sf::Color graphColor = sf::Color::White, bool drawAxes = true, sf::Color AxesColor = sf::Color::White);
-
 
 template<typename fonct>
 bool construit(fonct f, float valeur, float const precision, sf::FloatRect I, std::vector<sf::Vertex>& graphique) {
@@ -96,7 +96,7 @@ bool construit(fonct f, float valeur, float const precision, sf::FloatRect I, st
 		}
 	}
 
-	return false;
+	return true;
 }
 template<typename fonct>
 inline bool buildGraph(fonct f, float value, float const prec, sf::View const& view, std::vector<sf::Vertex>& graph, sf::Color graphColor, bool drawAxes, sf::Color AxesColor)
