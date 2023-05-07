@@ -96,7 +96,7 @@ bool construit(fonct f, float valeur, float const precision, sf::FloatRect I, st
 		}
 	}
 
-	return false;
+	return true;
 }
 template<typename fonct>
 inline bool buildGraph(fonct f, float value, float const prec, sf::View const& view, std::vector<sf::Vertex>& graph, sf::Color graphColor, bool drawAxes, sf::Color AxesColor)
