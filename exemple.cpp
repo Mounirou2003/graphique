@@ -2,6 +2,10 @@
 #include "graphicBuilder.hpp"
 #include <vector>
 
+float f1(float x, float y) {
+	return  tan(x*x+y*y);
+}
+
 int main()
 {
 
@@ -12,7 +16,7 @@ int main()
 	float zoom = 1.f;//zoom actuel
 	view.zoom(zoom);
 
-	auto f = [](float x, float y)->float {return sin(0.01*sqrt(x*x+y*y)); };//y + x = 0
+	auto f2 = [](float x, float y)->float {return sin(0.01 * sqrt(x * x + y * y)); };
 
 
 	srand(time(NULL));
@@ -59,7 +63,7 @@ int main()
 		else if (!mousePrecPos.empty())
 			mousePrecPos.clear();
 
-		buildGraph(f, 0.f, 0.0015f, view, graphique, sf::Color::Blue, true, sf::Color::White);
+		buildGraphSFML(f1, 0.f, 0.0025f, view, graphique, sf::Color::Blue, true, sf::Color::White);
 
 		window.setView(view);
 		window.clear(sf::Color::Black);

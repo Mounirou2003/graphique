@@ -1,8 +1,13 @@
 #include "graphicBuilder.hpp"
 
-void arrange(std::vector<sf::Vertex>& tab, sf::Color couleur) {
+void arrangeSFML(std::vector<sf::Vertex>& tab, sf::Color couleur) {
 	for (auto& point : tab) {
 		point.position.y = -point.position.y;
+		point.color = couleur;
+	}
+}
+void color(std::vector<sf::Vertex>& tab, sf::Color couleur) {
+	for (auto& point : tab) {
 		point.color = couleur;
 	}
 }
