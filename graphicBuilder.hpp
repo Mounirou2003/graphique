@@ -13,7 +13,7 @@ void arrangeSFML(std::vector<sf::Vertex>& tab, sf::Color couleur = sf::Color::Wh
 void color(std::vector<sf::Vertex>& tab, sf::Color couleur = sf::Color::White);
 //renvoi le point entre point1 et point2
 sf::Vector2f moyenne(sf::Vector2f point1, sf::Vector2f point2);
- 
+
 /*
 * construit un tableau de "lignes" (de paires de points) où chaque point résout l'équation f(x,y)=valeur
 * la precision est la fraction de I qui servira de pas pour calculer les points
@@ -32,7 +32,7 @@ void buildGraphSFML(fonct f, float value, float prec, sf::View const& view, std:
 
 template<typename fonct>
 inline void construit(fonct f, float valeur, float const precision, sf::FloatRect I, std::vector<sf::Vertex>& graphique) {
-
+	constexpr int numbRec = 3; //nombre de moyennes recalculées pour chaque point
 	sf::Vector2f pas = sf::Vector2f(I.width, I.height) * precision;
 	graphique.clear();
 
@@ -50,6 +50,7 @@ inline void construit(fonct f, float valeur, float const precision, sf::FloatRec
 			}
 
 			for (int i = 0; i < 2; i++) {
+				//étude des points dans la même colone
 				if (quadB.at(i) != quadB.at(2 * i + 1)) {
 					sf::Vector2f point1, point2, point3;
 					bool point1B, point2B, point3B;
@@ -63,16 +64,18 @@ inline void construit(fonct f, float valeur, float const precision, sf::FloatRec
 					point3 = quadPos.at(2 * i + 1);
 					point3B = quadB.at(2 * i + 1);
 
-					for (int k = 0; k < 3; k++) {
+					for (int k = 0; k < numbRec; k++) {
 						if (point2B == point1B) {
 
 							point1 = point2;
 							point2 = moyenne(point2, point3);
+							point2B = f(point2.x, point2.y) >= valeur;
 						}
 						else
 						{
 							point3 = point2;
-							point2 = moyenne(point2, point2);
+							point2 = moyenne(point1, point2);
+							point2B = f(point2.x, point2.y) >= valeur;
 						}
 					}
 
@@ -92,17 +95,17 @@ inline void construit(fonct f, float valeur, float const precision, sf::FloatRec
 					point3 = quadPos.at(2 + i);
 					point3B = quadB.at(2 + i);
 
-
-					for (int k = 0; k < 3; k++) {
+					for (int k = 0; k < numbRec; k++) {
 						if (point2B == point1B) {
-
 							point1 = point2;
 							point2 = moyenne(point2, point3);
+							point2B = f(point2.x, point2.y) >= valeur;
 						}
 						else
 						{
 							point3 = point2;
-							point2 = moyenne(point2, point2);
+							point2 = moyenne(point1, point2);
+							point2B = f(point2.x, point2.y) >= valeur;
 						}
 					}
 

@@ -3,7 +3,7 @@
 #include <vector>
 
 float f1(float x, float y) {
-	return  x-y;
+	return  tan(x*x+y*y);
 }
 
 int main()
@@ -63,7 +63,7 @@ int main()
 		else if (!mousePrecPos.empty())
 			mousePrecPos.clear();
 
-		buildGraphSFML(f1, 0.f, 0.002f, view, graphique, sf::Color::Blue, true, sf::Color::White);
+		buildGraphSFML(f1, 0.f, 0.0025f, view, graphique, sf::Color::Blue, true, sf::Color::White);
 
 		window.setView(view);
 		window.clear(sf::Color::Black);
