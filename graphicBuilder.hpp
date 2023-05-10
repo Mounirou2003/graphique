@@ -21,10 +21,10 @@ sf::Vector2f moyenne(sf::Vector2f point1, sf::Vector2f point2);
 */
 template<typename fonct>
 void construit(fonct f, float valeur, float const precision, sf::FloatRect I, std::vector<sf::Vertex>& graphique);
-//
+// Construit un tableau de paires de point contenu dans le rectangle de view ainsi que les tracés x = 0 et y = 0
 template<typename fonct>
 void buildGraph(fonct f, float value, float prec, sf::View const& view, std::vector<sf::Vertex>& graph, sf::Color graphColor = sf::Color::White, bool drawAxes = true, sf::Color AxesColor = sf::Color::White);
-//
+// Construit un tableau de paires de point contenu dans le rectangle de view ainsi que les tracés x = 0 et y = 0 mais prend en compte le comportement de SFML et retourne le graphique
 template<typename fonct>
 void buildGraphSFML(fonct f, float value, float prec, sf::View const& view, std::vector<sf::Vertex>& graph, sf::Color graphColor = sf::Color::White, bool drawAxes = true, sf::Color AxesColor = sf::Color::White);
 

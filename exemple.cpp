@@ -3,7 +3,7 @@
 #include <vector>
 
 float f1(float x, float y) {
-	return  sin(0.01 * sqrt(x * x + y * y));
+	return  x-y;
 }
 
 int main()
