@@ -20,19 +20,18 @@ sf::Vector2f moyenne(sf::Vector2f point1, sf::Vector2f point2);
 * tous ces points sont enregistrés dans graphique qui est avant tout vidé
 */
 template<typename fonct>
-void construit(fonct f, float valeur, float const precision, sf::FloatRect I, std::vector<sf::Vertex>& graphique);
+void construit(fonct f, float valeur, float const precision, const int pointRecalc, sf::FloatRect I, std::vector<sf::Vertex>& graphique);
 // Construit un tableau de paires de point contenu dans le rectangle de view ainsi que les tracés x = 0 et y = 0
 template<typename fonct>
-void buildGraph(fonct f, float value, float prec, sf::View const& view, std::vector<sf::Vertex>& graph, sf::Color graphColor = sf::Color::White, bool drawAxes = true, sf::Color AxesColor = sf::Color::White);
+void buildGraph(fonct f, float value, float prec, const int pointRecalc, sf::View const& view, std::vector<sf::Vertex>& graph, sf::Color graphColor = sf::Color::White, bool drawAxes = true, sf::Color AxesColor = sf::Color::White);
 // Construit un tableau de paires de point contenu dans le rectangle de view ainsi que les tracés x = 0 et y = 0 mais prend en compte le comportement de SFML et retourne le graphique
 template<typename fonct>
-void buildGraphSFML(fonct f, float value, float prec, sf::View const& view, std::vector<sf::Vertex>& graph, sf::Color graphColor = sf::Color::White, bool drawAxes = true, sf::Color AxesColor = sf::Color::White);
+void buildGraphSFML(fonct f, float value, float prec, const int pointRecalc, sf::View const& view, std::vector<sf::Vertex>& graph, sf::Color graphColor = sf::Color::White, bool drawAxes = true, sf::Color AxesColor = sf::Color::White);
 
 /****************************** template implementation ******************************/
 
 template<typename fonct>
-inline void construit(fonct f, float valeur, float const precision, sf::FloatRect I, std::vector<sf::Vertex>& graphique) {
-	constexpr int numbRec = 3; //nombre de moyennes recalculées pour chaque point
+inline void construit(fonct f, float valeur, float const precision, const int pointRecalc, sf::FloatRect I, std::vector<sf::Vertex>& graphique) {
 	sf::Vector2f pas = sf::Vector2f(I.width, I.height) * precision;
 	graphique.clear();
 
@@ -64,7 +63,7 @@ inline void construit(fonct f, float valeur, float const precision, sf::FloatRec
 					point3 = quadPos.at(2 * i + 1);
 					point3B = quadB.at(2 * i + 1);
 
-					for (int k = 0; k < numbRec; k++) {
+					for (int k = 0; k < pointRecalc; k++) {
 						if (point2B == point1B) {
 
 							point1 = point2;
@@ -95,7 +94,7 @@ inline void construit(fonct f, float valeur, float const precision, sf::FloatRec
 					point3 = quadPos.at(2 + i);
 					point3B = quadB.at(2 + i);
 
-					for (int k = 0; k < numbRec; k++) {
+					for (int k = 0; k < pointRecalc; k++) {
 						if (point2B == point1B) {
 							point1 = point2;
 							point2 = moyenne(point2, point3);
@@ -118,11 +117,11 @@ inline void construit(fonct f, float valeur, float const precision, sf::FloatRec
 	return;
 }
 template<typename fonct>
-inline void buildGraphSFML(fonct f, float value, float const prec, sf::View const& view, std::vector<sf::Vertex>& graph, sf::Color graphColor, bool drawAxes, sf::Color AxesColor)
+inline void buildGraphSFML(fonct f, float value, float const prec, const int pointRecalc, sf::View const& view, std::vector<sf::Vertex>& graph, sf::Color graphColor, bool drawAxes, sf::Color AxesColor)
 {
 	sf::FloatRect viewRect = sf::FloatRect(sf::Vector2f(view.getCenter().x - 0.5f * view.getSize().x, -view.getCenter().y - 0.5f * view.getSize().y), view.getSize());
 
-	construit(f, value, prec, viewRect, graph);
+	construit(f, value, prec, pointRecalc, viewRect, graph);
 	arrangeSFML(graph, graphColor);
 
 	if (drawAxes) {
@@ -160,11 +159,11 @@ inline void buildGraphSFML(fonct f, float value, float const prec, sf::View cons
 	return;
 }
 template<typename fonct>
-inline void buildGraph(fonct f, float value, float const prec, sf::View const& view, std::vector<sf::Vertex>& graph, sf::Color graphColor, bool drawAxes, sf::Color AxesColor)
+inline void buildGraph(fonct f, float value, float const prec, const int pointRecalc, sf::View const& view, std::vector<sf::Vertex>& graph, sf::Color graphColor, bool drawAxes, sf::Color AxesColor)
 {
 	sf::FloatRect viewRect = sf::FloatRect(sf::Vector2f(view.getCenter().x - 0.5f * view.getSize().x, view.getCenter().y - 0.5f * view.getSize().y), view.getSize());//rectangle que view affiche
 
-	construit(f, value, prec, viewRect, graph);
+	construit(f, value, prec, pointRecalc, viewRect, graph);
 	color(graph, graphColor);
 
 	if (drawAxes) {
