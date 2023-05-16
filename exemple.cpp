@@ -1,9 +1,11 @@
 #include <SFML/Graphics.hpp>
 #include "graphicBuilder.hpp"
 #include <vector>
+#include <cmath>
 
 float f1(float x, float y) {
-	return  sin(x * x + y * y);
+	const float dist = sqrt( x*x+y*y);
+	return dist-floorf(dist)-0.5f;
 }
 
 int main()
@@ -63,7 +65,7 @@ int main()
 		else if (!mousePrecPos.empty())
 			mousePrecPos.clear();
 
-		buildGraphSFML(f1, 0.f, 0.002f, 1, view, graphique, sf::Color::Blue, true, sf::Color::White);
+		buildGraphSFML(f1, 0.002, 1, view, graphique, sf::Color::Blue, true, sf::Color::White);
 
 		window.setView(view);
 		window.clear(sf::Color::Black);
