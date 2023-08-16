@@ -4,8 +4,7 @@
 #include <cmath>
 
 float f1(float x, float y) {
-	const float dist = sqrt( x*x+y*y);
-	return dist-floorf(dist)-0.5f;
+	return 2*sin(10*x) - y;
 }
 
 int main()
@@ -15,10 +14,11 @@ int main()
 	sf::RenderWindow window(sf::VideoMode(longueur, hauteur), "SFML works!");
 	sf::View view(sf::Vector2f(0, 0), sf::Vector2f(window.getSize()));
 
-	float zoom = 1.f;//zoom actuel
+	float zoom = .01f;//zoom actuel
 	view.zoom(zoom);
 
-	auto f2 = [](float x, float y)->float {return sin(0.01 * sqrt(x * x + y * y)); };
+	auto f2 = [](float x, float y)->float {return 2*sin(11 * x) - y; };
+	auto f3 = [f2](float x, float y)->float {return f2(x, y) + f1(x, y) + y; };
 
 
 	srand(time(NULL));
@@ -65,8 +65,9 @@ int main()
 		else if (!mousePrecPos.empty())
 			mousePrecPos.clear();
 
-		buildGraphSFML(f1, 0.002, 1, view, graphique, sf::Color::Blue, true, sf::Color::White);
-
+		buildGraphSFML(f1, 0.003, 5, view, graphique, sf::Color::Blue, true, sf::Color::White);
+		addGraphSFML(f2, 0.003, 5, view, graphique, sf::Color::Red, false);
+		addGraphSFML(f3, 0.003, 5, view, graphique, sf::Color::Green, false);
 		window.setView(view);
 		window.clear(sf::Color::Black);
 

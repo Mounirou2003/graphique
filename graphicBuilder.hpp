@@ -7,10 +7,10 @@
 
 
 //change la couleur de tous les vertex de tab et remplace y par -y (car sfml mesure les y positifs vers le bas)
-void arrangeSFML(std::vector<sf::Vertex>& tab, sf::Color couleur = sf::Color::White);
+void arrangeSFML(std::vector<sf::Vertex>& tab, sf::Color couleur = sf::Color::White,int firstElem = 0);
 
 //change la couleur de tous les vertex de tab
-void color(std::vector<sf::Vertex>& tab, sf::Color couleur = sf::Color::White);
+void color(std::vector<sf::Vertex>& tab, sf::Color couleur = sf::Color::White,int firstElem = 0);
 //renvoi le point entre point1 et point2
 sf::Vector2f moyenne(sf::Vector2f point1, sf::Vector2f point2);
 
@@ -20,7 +20,7 @@ sf::Vector2f moyenne(sf::Vector2f point1, sf::Vector2f point2);
 * tous ces points sont enregistrés dans graphique qui est avant tout vidé
 */
 template<typename fonct>
-void construit(fonct f, double const precision, const int pointRecalc, sf::FloatRect I, std::vector<sf::Vertex>& graphique);
+void construit(fonct f, double const precision, const int pointRecalc, sf::FloatRect I, std::vector<sf::Vertex>& graphique, bool add = false);
 // Construit un tableau de paires de point contenu dans le rectangle de view ainsi que les tracés x = 0 et y = 0
 template<typename fonct>
 void buildGraph(fonct f, double const prec, const int pointRecalc, sf::View const& view, std::vector<sf::Vertex>& graph, sf::Color graphColor = sf::Color::White, bool drawAxes = true, sf::Color AxesColor = sf::Color::White);
@@ -28,12 +28,19 @@ void buildGraph(fonct f, double const prec, const int pointRecalc, sf::View cons
 template<typename fonct>
 void buildGraphSFML(fonct f, double const prec, const int pointRecalc, sf::View const& view, std::vector<sf::Vertex>& graph, sf::Color graphColor = sf::Color::White, bool drawAxes = true, sf::Color AxesColor = sf::Color::White);
 
+template<typename fonct>
+inline void addGraphSFML(fonct f, double const prec, const int pointRecalc, sf::View const& view, std::vector<sf::Vertex>& graph, sf::Color graphColor, bool drawAxes = true, sf::Color AxesColor = sf::Color::White);
+
+template<typename fonct>
+inline void addGraph(fonct f, double const prec, const int pointRecalc, sf::View const& view, std::vector<sf::Vertex>& graph, sf::Color graphColor, bool drawAxes = true, sf::Color AxesColor = sf::Color::White);
+
 /****************************** template implementation ******************************/
 
 template<typename fonct>
-inline void construit(fonct f, double const precision, const int pointRecalc, sf::FloatRect I, std::vector<sf::Vertex>& graphique) {
+inline void construit(fonct f, double const precision, const int pointRecalc, sf::FloatRect I, std::vector<sf::Vertex>& graphique, bool add) {
 	sf::Vector2<double> pas = sf::Vector2<double>(I.width, I.height) * precision;
-	graphique.clear();
+	if (!add)
+		graphique.clear();
 
 	for (double x = I.left; x <= I.left + I.width - pas.x; x += pas.x) {
 		for (double y = I.top; y <= I.top + I.height - pas.y; y += pas.y) {
@@ -136,7 +143,7 @@ inline void buildGraphSFML(fonct f, double const prec, const int pointRecalc, sf
 
 			X.push_back(vert);
 			return X;
-		};
+			};
 		auto axeYBuild = [view](sf::Color color = sf::Color::White) ->std::vector<sf::Vertex> {
 			std::vector<sf::Vertex> X;
 			auto vert = sf::Vertex(sf::Vector2f(0, view.getCenter().y - 0.5f * view.getSize().y));
@@ -148,7 +155,7 @@ inline void buildGraphSFML(fonct f, double const prec, const int pointRecalc, sf
 
 			X.push_back(vert);
 			return X;
-		};
+			};
 
 		std::vector<sf::Vertex> axeX = axeXBuild(AxesColor);
 		std::vector<sf::Vertex> axeY = axeYBuild(AxesColor);
@@ -178,7 +185,7 @@ inline void buildGraph(fonct f, double const prec, const int pointRecalc, sf::Vi
 
 			X.push_back(vert);
 			return X;
-		};
+			};
 		auto axeYBuild = [view](sf::Color color = sf::Color::White) ->std::vector<sf::Vertex> {
 			std::vector<sf::Vertex> X;
 			auto vert = sf::Vertex(sf::Vector2f(0, view.getCenter().y - 0.5f * view.getSize().y));
@@ -190,7 +197,93 @@ inline void buildGraph(fonct f, double const prec, const int pointRecalc, sf::Vi
 
 			X.push_back(vert);
 			return X;
-		};
+			};
+
+		std::vector<sf::Vertex> axeX = axeXBuild(AxesColor);
+		std::vector<sf::Vertex> axeY = axeYBuild(AxesColor);
+
+		graph.insert(graph.begin(), axeX.begin(), axeX.end());
+		graph.insert(graph.begin(), axeY.begin(), axeY.end());
+	}
+	return;
+}
+
+template<typename fonct>
+inline void addGraphSFML(fonct f, double const prec, const int pointRecalc, sf::View const& view, std::vector<sf::Vertex>& graph, sf::Color graphColor, bool drawAxes, sf::Color AxesColor)
+{
+	sf::FloatRect viewRect = sf::FloatRect(sf::Vector2f(view.getCenter().x - 0.5f * view.getSize().x, -view.getCenter().y - 0.5f * view.getSize().y), view.getSize());
+	
+	int sizeCount = graph.size();
+	construit(f, prec, pointRecalc, viewRect, graph, true);
+	arrangeSFML(graph, graphColor,sizeCount);
+
+	if (drawAxes) {
+		auto axeXBuild = [view](sf::Color color = sf::Color::White) ->std::vector<sf::Vertex> {
+			std::vector<sf::Vertex> X;
+			auto vert = sf::Vertex(sf::Vector2f(view.getCenter().x - 0.5f * view.getSize().x, 0));
+			vert.color = color;
+
+			X.push_back(vert);
+			vert = sf::Vertex(sf::Vector2f(view.getCenter().x + 0.5f * view.getSize().x, 0));
+			vert.color = color;
+
+			X.push_back(vert);
+			return X;
+			};
+		auto axeYBuild = [view](sf::Color color = sf::Color::White) ->std::vector<sf::Vertex> {
+			std::vector<sf::Vertex> X;
+			auto vert = sf::Vertex(sf::Vector2f(0, view.getCenter().y - 0.5f * view.getSize().y));
+			vert.color = color;
+
+			X.push_back(vert);
+			vert = sf::Vertex(sf::Vector2f(0, view.getCenter().y + 0.5f * view.getSize().y));
+			vert.color = color;
+
+			X.push_back(vert);
+			return X;
+			};
+
+		std::vector<sf::Vertex> axeX = axeXBuild(AxesColor);
+		std::vector<sf::Vertex> axeY = axeYBuild(AxesColor);
+
+		graph.insert(graph.begin(), axeX.begin(), axeX.end());
+		graph.insert(graph.begin(), axeY.begin(), axeY.end());
+	}
+	return;
+}
+template<typename fonct>
+inline void addGraph(fonct f, double const prec, const int pointRecalc, sf::View const& view, std::vector<sf::Vertex>& graph, sf::Color graphColor, bool drawAxes, sf::Color AxesColor)
+{
+	sf::FloatRect viewRect = sf::FloatRect(sf::Vector2f(view.getCenter().x - 0.5f * view.getSize().x, view.getCenter().y - 0.5f * view.getSize().y), view.getSize());//rectangle que view affiche
+
+	construit(f, prec, pointRecalc, viewRect, graph, true);
+	color(graph, graphColor);
+
+	if (drawAxes) {
+		auto axeXBuild = [view](sf::Color color = sf::Color::White) ->std::vector<sf::Vertex> {
+			std::vector<sf::Vertex> X;
+			auto vert = sf::Vertex(sf::Vector2f(view.getCenter().x - 0.5f * view.getSize().x, 0));
+			vert.color = color;
+
+			X.push_back(vert);
+			vert = sf::Vertex(sf::Vector2f(view.getCenter().x + 0.5f * view.getSize().x, 0));
+			vert.color = color;
+
+			X.push_back(vert);
+			return X;
+			};
+		auto axeYBuild = [view](sf::Color color = sf::Color::White) ->std::vector<sf::Vertex> {
+			std::vector<sf::Vertex> X;
+			auto vert = sf::Vertex(sf::Vector2f(0, view.getCenter().y - 0.5f * view.getSize().y));
+			vert.color = color;
+
+			X.push_back(vert);
+			vert = sf::Vertex(sf::Vector2f(0, view.getCenter().y + 0.5f * view.getSize().y));
+			vert.color = color;
+
+			X.push_back(vert);
+			return X;
+			};
 
 		std::vector<sf::Vertex> axeX = axeXBuild(AxesColor);
 		std::vector<sf::Vertex> axeY = axeYBuild(AxesColor);
