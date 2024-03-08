@@ -5,7 +5,7 @@
 #include <iostream>
 
 float f1(float x, float y) {
-	return sin(1/x)*sin(1/y)-0.5;
+	return sin(1/x)*sin(1/y);
 }
 
 int main()
@@ -87,9 +87,9 @@ int main()
 			}
 		}
 
-		buildGraphSFML(f1, 0.003, 5, view, graphique, sf::Color::Blue, true, sf::Color::White);
-		addGraphSFML(f2, 0.003, 5, view, graphique, sf::Color::Red, false);
-		addGraphSFML(f3, 0.003, 5, view, graphique, sf::Color::Green, false);
+		buildGraphSFML(f1,0.5, 0.003, 5, view, graphique, sf::Color::Blue, true, sf::Color::White);
+		//addGraphSFML(f2, 0.003, 5, view, graphique, sf::Color::Red, false);
+		//addGraphSFML(f3, 0.003, 5, view, graphique, sf::Color::Green, false);
 
 		window.setView(view);
 		window.clear(sf::Color::Black);
