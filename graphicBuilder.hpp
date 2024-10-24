@@ -8,7 +8,6 @@
 
 //change la couleur de tous les vertex de tab et remplace y par -y (car sfml mesure les y positifs vers le bas)
 void arrangeSFML(std::vector<sf::Vertex>& tab, sf::Color couleur = sf::Color::White,int firstElem = 0);
-void addAxes(const sf::View& view, sf::Color AxesColor, std::vector<sf::Vertex>& graph);
 
 //change la couleur de tous les vertex de tab
 void color(std::vector<sf::Vertex>& tab, sf::Color couleur = sf::Color::White,int firstElem = 0);
