@@ -87,7 +87,10 @@ int main()
 			}
 		}
 
+
 		buildGraphSFML(f1, 0.003, 5, view, graphique, sf::Color::Blue, true, sf::Color::White);
+
+
 		addGraphSFML(f2, 0.003, 5, view, graphique, sf::Color::Red, false);
 		addGraphSFML(f3, 0.003, 5, view, graphique, sf::Color::Green, false);
 

@@ -21,3 +21,36 @@ sf::Vector2f moyenne(sf::Vector2f point1, sf::Vector2f point2)
 
 	return moy;
 }
+
+void addAxes(const sf::View& view, sf::Color AxesColor, std::vector<sf::Vertex>& graph) {
+	auto axeXBuild = [view](sf::Color color = sf::Color::White) ->std::vector<sf::Vertex> {
+		std::vector<sf::Vertex> X;
+		auto vert = sf::Vertex(sf::Vector2f(view.getCenter().x - 0.5f * view.getSize().x, 0));
+		vert.color = color;
+
+		X.push_back(vert);
+		vert = sf::Vertex(sf::Vector2f(view.getCenter().x + 0.5f * view.getSize().x, 0));
+		vert.color = color;
+
+		X.push_back(vert);
+		return X;
+		};
+	auto axeYBuild = [view](sf::Color color = sf::Color::White) ->std::vector<sf::Vertex> {
+		std::vector<sf::Vertex> X;
+		auto vert = sf::Vertex(sf::Vector2f(0, view.getCenter().y - 0.5f * view.getSize().y));
+		vert.color = color;
+
+		X.push_back(vert);
+		vert = sf::Vertex(sf::Vector2f(0, view.getCenter().y + 0.5f * view.getSize().y));
+		vert.color = color;
+
+		X.push_back(vert);
+		return X;
+		};
+
+	std::vector<sf::Vertex> axeX = axeXBuild(AxesColor);
+	std::vector<sf::Vertex> axeY = axeYBuild(AxesColor);
+
+	graph.insert(graph.begin(), axeX.begin(), axeX.end());
+	graph.insert(graph.begin(), axeY.begin(), axeY.end());
+}
