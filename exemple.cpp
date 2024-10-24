@@ -1,19 +1,25 @@
 #include <SFML/Graphics.hpp>
 #include "graphicBuilder.hpp"
+#include "bouton.hpp"
 #include <vector>
 #include <cmath>
 #include <iostream>
 
 float f1(float x, float y) {
-	return sin(1/x)*sin(1/y)-0.5;
+	return sin(1/x)* sin(1/y);
 }
+
+/*
+float f1(float x, float y) {
+	return log(x*x+y*y - exp(x*y));
+}*/
 
 int main()
 {
 
 	int const hauteur = 720, longueur = 1280;
 	sf::RenderWindow window(sf::VideoMode(longueur, hauteur), "SFML works!");
-	sf::View view(sf::Vector2f(0, 0), sf::Vector2f(window.getSize()));
+	sf::View view(sf::Vector2f(0, 0), sf::Vector2f(window.getSize())),defaultView = window.getDefaultView();
 	sf::CircleShape test(10);
 	test.setFillColor(sf::Color(225, 200, 150));
 
@@ -29,9 +35,20 @@ int main()
 
 	bool followMouse = false;
 	std::vector<sf::Vector2i> mousePrecPos;//position précédente de la sourie utilisée pour déplacer la zone d'affichage
+	
+	Slider slider(&window, sf::Vector2f(15, 60), sf::Vector2u(100, 2), 20, 0.5*3.14159);
+	Slider sliderPrec(&window, sf::Vector2f(45, 60), sf::Vector2u(100, 2), 20, 0.5*3.14159);
+
+	sliderPrec.setLerp(0,-1,1);
+	//Slider slider(&window, sf::Vector2f(0, 0), sf::Vector2u(100, 5), 20, 0.5 * 3.14159);
+
 
 	while (window.isOpen())
 	{
+
+		slider.uptadeState();
+		sliderPrec.uptadeState();
+
 		sf::Event event;
 		while (window.pollEvent(event))
 		{
@@ -62,8 +79,13 @@ int main()
 			continue;
 
 			case sf::Event::MouseButtonPressed:
-				if (event.mouseButton.button == sf::Mouse::Left)
-					followMouse = true;
+				if (event.mouseButton.button == sf::Mouse::Left) {
+					if (slider.isPressed()) {
+						slider.setSlide();
+						continue;
+					}
+						followMouse = true;
+				}
 				continue;
 			case sf::Event::MouseButtonReleased:
 				if (event.mouseButton.button == sf::Mouse::Left) {
@@ -77,22 +99,32 @@ int main()
 			}
 
 			//***************************** Gestion des déplacements *****************************
-			if (followMouse && event.type == sf::Event::MouseMoved) {
-				if (!mousePrecPos.empty()) {
-					view.move(zoom * (sf::Vector2f(*mousePrecPos.rbegin() - sf::Mouse::getPosition())));
-					mousePrecPos.clear();
+			if (event.type == sf::Event::MouseMoved) {
+
+				if (slider.isPressed()) {
+					slider.setSlide();
+					continue;
+				}
+				if (sliderPrec.isPressed()) {
+					sliderPrec.setSlide();
+					continue;
 				}
 
-				mousePrecPos.push_back(sf::Mouse::getPosition());
+
+				if (followMouse) {
+					if (!mousePrecPos.empty()) {
+						view.move(zoom * (sf::Vector2f(*mousePrecPos.rbegin() - sf::Mouse::getPosition())));
+						mousePrecPos.clear();
+					}
+
+					mousePrecPos.push_back(sf::Mouse::getPosition());
+				}
 			}
 		}
 
-
-		buildGraphSFML(f1, 0.003, 5, view, graphique, sf::Color::Blue, true, sf::Color::White);
-
-
-		addGraphSFML(f2, 0.003, 5, view, graphique, sf::Color::Red, false);
-		addGraphSFML(f3, 0.003, 5, view, graphique, sf::Color::Green, false);
+		buildGraphSFML(f1,slider.getLerp(-1,1),sliderPrec.getLerp(0.0005,0.005), 5, view, graphique, sf::Color::Blue, true, sf::Color::White);
+		//addGraphSFML(f2, 0.003, 5, view, graphique, sf::Color::Red, false);
+		//addGraphSFML(f3, 0.003, 5, view, graphique, sf::Color::Green, false);
 
 		window.setView(view);
 		window.clear(sf::Color::Black);
@@ -103,6 +135,12 @@ int main()
 			arrangeSFML(points);
 			window.draw(&points[0], points.size(), sf::Points);
 		}
+
+		window.setView(defaultView);
+
+		window.draw(slider);
+		window.draw(sliderPrec);
+
 		window.display();
 	}
 
